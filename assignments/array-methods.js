@@ -55,29 +55,81 @@ const runners = [{"id":1,"first_name":"Charmain","last_name":"Seiler","email":"c
 
 // ==== Challenge 1: Use .forEach() ====
 // The event director needs both the first and last names of each runner for their running bibs.  Combine both the first and last names into a new array called fullName. 
+
 let fullName = [];
+runners.forEach( function(runner) { fullName.push(runner.first_name + " " + runner.last_name) } );
 console.log(fullName);
+
+ // Using map, because I did not read the instructions the first time around. 
+    //fullName = runners.map((runner) => { return {'runner_fullname': runner.first_name + " " + runner.last_name}; });
+
 
 // ==== Challenge 2: Use .map() ====
 // The event director needs to have all the runner's first names converted to uppercase because the director BECAME DRUNK WITH POWER. Convert each first name into all caps and log the result
+
 let allCaps = [];
+allCaps = runners.map((runner) => { return { 'first_name_caps': runner.first_name.toUpperCase()}; });
 console.log(allCaps); 
 
 // ==== Challenge 3: Use .filter() ====
 // The large shirts won't be available for the event due to an ordering issue.  Get a list of runners with large sized shirts so they can choose a different size. Return an array named largeShirts that contains information about the runners that have a shirt size of L and log the result
+
 let largeShirts = [];
+largeShirts = runners.filter((runner) => { return runner.shirt_size == "L" })
 console.log(largeShirts);
 
 // ==== Challenge 4: Use .reduce() ====
 // The donations need to be tallied up and reported for tax purposes. Add up all the donations into a ticketPriceTotal array and log the result
+
 let ticketPriceTotal = [];
+ticketPriceTotal = runners.reduce((total, runner) => {
+    return total += runner.donation;
+  }, 0);
 console.log(ticketPriceTotal);
 
 // ==== Challenge 5: Be Creative ====
 // Now that you have used .forEach(), .map(), .filter(), and .reduce().  I want you to think of potential problems you could solve given the data set and the 5k fun run theme.  Try to create and then solve 3 unique problems using one or many of the array methods listed above.
+// I'm going to combine 3 problems in to one -- going with the shortage of large shirts example -- the director would like to refund 50% of the donation for runners who ordered large shirts and donated more than the average ticket price.
+// Additionally, the director would like a report showing the average ticket price, the total number of runners who ordered large shirts, how many runners will be refunded and the corresponding financial impact, and how many runners will not be refunded.
 
 // Problem 1
+
+function calcLiability() {
+    avgTicketTotal = runners.reduce((total, runner, index) => {
+        total += runner.donation;
+        if ( index === runners.length-1) {
+            return total/runners.length;
+        }
+        else {
+            return total;
+        }
+    }, 0);
+
+    let largeShirts = [];
+    largeShirts = runners.filter((runner) => { return runner.shirt_size == "L" });
+
+    let refundLarge = [];
+    refundLarge = largeShirts.filter(refundDonation);
+
+    let noRefundLarge = [];
+    noRefundLarge = largeShirts.filter(item => !refundLarge.includes(item))
+
+    refundTotal = refundLarge.reduce((total, runner) => {
+        return total += runner.donation/2;
+    }, 0);
+    console.log("The average ticket total is $" + avgTicketTotal);
+    console.log(largeShirts.length + " runners have ordered large shirts.")
+    console.log(refundLarge.length + " runners are due a refund, totaling $" + refundTotal);
+    console.log(noRefundLarge.length + " runners will not be refunded.");
+}
+
+ function refundDonation(element, index, array){
+    return element.donation > avgTicketTotal
+}
+
+console.log(calcLiability());
 
 // Problem 2
 
 // Problem 3
+
